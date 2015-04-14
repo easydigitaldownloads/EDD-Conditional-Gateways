@@ -193,11 +193,13 @@ if( ! class_exists( 'EDD_Conditional_Gateways' ) ) {
                 $cart_contents = edd_get_cart_contents();
 
                 foreach( $gateways as $key => $gateway ) {
-                    foreach( $cart_contents as $item ) {
-                        if( array_key_exists( $key, $allowed ) ) {
-                            if( edd_conditional_gateways_is_limited( $item['id'] ) ) {
-                                if( ! edd_conditional_gateways_is_allowed( $item['id'], $key ) ) {
-                                    unset( $allowed[$key] );
+                    if( is_array( $cart_contents ) ) {
+                        foreach( $cart_contents as $item ) {
+                            if( array_key_exists( $key, $allowed ) ) {
+                                if( edd_conditional_gateways_is_limited( $item['id'] ) ) {
+                                    if( ! edd_conditional_gateways_is_allowed( $item['id'], $key ) ) {
+                                        unset( $allowed[$key] );
+                                    }
                                 }
                             }
                         }
