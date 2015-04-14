@@ -1,0 +1,74 @@
+# Copyright (C) 2015 Easy Digital Downloads - Conditional Gateways
+# This file is distributed under the same license as the Easy Digital Downloads - Conditional Gateways package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Easy Digital Downloads - Conditional Gateways 1.0.0\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/EDD-Conditional-"
+"Gateways\n"
+"POT-Creation-Date: 2015-04-14 16:09:38+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2015-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: edd-conditional-gateways.php:164
+msgid "Conditional Gateways Settings"
+msgstr ""
+
+#: edd-conditional-gateways.php:170
+msgid "Checkout Error Message"
+msgstr ""
+
+#: edd-conditional-gateways.php:171
+msgid ""
+"The error message to display if no gateways are available due to the cart "
+"contents."
+msgstr ""
+
+#: edd-conditional-gateways.php:173 edd-conditional-gateways.php:211
+msgid ""
+"Your cart contents have resulted in no gateways being available. Please "
+"remove an item from your cart and try again."
+msgstr ""
+
+#: includes/admin/meta-boxes.php:25
+msgid "Conditional Gateways"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:48
+msgid "Allowed Gateways:"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:57
+msgid "Uncheck all gateways to allow all."
+msgstr ""
+
+#: includes/class.s214-edd-activation.php:77
+msgid " requires Easy Digital Downloads! Please activate it to continue!"
+msgstr ""
+
+#: includes/class.s214-edd-activation.php:79
+msgid " requires Easy Digital Downloads! Please install it to continue!"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Easy Digital Downloads - Conditional Gateways"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "https://easydigitaldownloads.com/extensions/conditional-gateways/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Allows you to configure supported gateways on a per-download basis"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Daniel J Griffiths"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://section214.com"
+msgstr ""
