@@ -3,7 +3,7 @@
  * Plugin Name:     Easy Digital Downloads - Conditional Gateways
  * Plugin URI:      https://easydigitaldownloads.com/extensions/conditional-gateways/
  * Description:     Allows you to configure supported gateways on a per-download basis
- * Version:         1.0.0
+ * Version:         1.0.1
  * Author:          Daniel J Griffiths
  * Author URI:      http://section214.com
  * Text Domain:     edd-conditional-gateways
@@ -66,7 +66,7 @@ if( ! class_exists( 'EDD_Conditional_Gateways' ) ) {
 		 */
 		private function setup_constants() {
 			// Plugin version
-			define( 'EDD_CONDITIONAL_GATEWAYS_VER', '1.0.0' );
+			define( 'EDD_CONDITIONAL_GATEWAYS_VER', '1.0.1' );
 
 			// Plugin path
 			define( 'EDD_CONDITIONAL_GATEWAYS_DIR', plugin_dir_path( __FILE__ ) );
