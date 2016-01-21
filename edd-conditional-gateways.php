@@ -187,10 +187,31 @@ if( ! class_exists( 'EDD_Conditional_Gateways' ) ) {
          * @return      array $gateways The allowed gateways
          */
         public function filter_gateways( $gateways ) {
-            $allowed = $gateways;
-            
             if( edd_is_checkout() ) {
                 $cart_contents = edd_get_cart_contents();
+
+                // Support wallet!
+                if( class_exists( 'EDD_Wallet' ) && is_user_logged_in() ) {
+                	$user_id = get_current_user_id();
+	                $value   = edd_wallet()->wallet->balance( $user_id );
+	                $total   = edd_get_cart_total();
+	                $fee     = EDD()->fees->get_fee( 'edd-wallet-deposit' );
+
+	                if( (float) $value >= (float) $total && ! $fee ) {
+						$checkout_label = edd_get_option( 'edd_wallet_gateway_label', __( 'My Wallet', 'edd-wallet' ) );
+
+						if( edd_get_option( 'edd_wallet_gateway_label_value', false ) == true && edd_is_checkout() ) {
+							$checkout_label .= ' ' . sprintf( __( '(%s available)', 'edd-wallet' ), edd_currency_filter( edd_format_amount( $value ) ) );
+						}
+
+						$gateways['wallet'] = array(
+							'admin_label'       => 'Wallet',
+							'checkout_label'    => $checkout_label
+						);
+					}
+				}
+
+				$allowed = $gateways;
 
                 foreach( $gateways as $key => $gateway ) {
                     if( is_array( $cart_contents ) ) {
