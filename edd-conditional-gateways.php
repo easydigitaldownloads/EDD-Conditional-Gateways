@@ -15,241 +15,131 @@
 
 // Exit if accessed directly
 if( ! defined( 'ABSPATH' ) ) {
-    exit;
+	exit;
 }
 
 
 if( ! class_exists( 'EDD_Conditional_Gateways' ) ) {
 
 
-    /**
-     * Main EDD_Conditional_Gateways class
-     *
-     * @since       1.0.0
-     */
-    class EDD_Conditional_Gateways {
+	/**
+	 * Main EDD_Conditional_Gateways class
+	 *
+	 * @since       1.0.0
+	 */
+	class EDD_Conditional_Gateways {
 
 
-        /**
-         * @var         EDD_Conditional_Gateways $instance The one true EDD_Conditional_Gateways
-         * @since       1.0.0
-         */
-        private static $instance;
+		/**
+		 * @var         EDD_Conditional_Gateways $instance The one true EDD_Conditional_Gateways
+		 * @since       1.0.0
+		 */
+		private static $instance;
 
 
-        /**
-         * Get active instance
-         *
-         * @access      public
-         * @since       1.0.0
-         * @return      self::$instance The one true EDD_Conditional_Gateways
-         */
-        public static function instance() {
-            if( ! self::$instance ) {
-                self::$instance = new EDD_Conditional_Gateways();
-                self::$instance->setup_constants();
-                self::$instance->includes();
-                self::$instance->load_textdomain();
-                self::$instance->hooks();
-            }
+		/**
+		 * Get active instance
+		 *
+		 * @access      public
+		 * @since       1.0.0
+		 * @return      self::$instance The one true EDD_Conditional_Gateways
+		 */
+		public static function instance() {
+			if( ! self::$instance ) {
+				self::$instance = new EDD_Conditional_Gateways();
+				self::$instance->setup_constants();
+				self::$instance->includes();
+				self::$instance->load_textdomain();
+				self::$instance->hooks();
+			}
 
-            return self::$instance;
-        }
-
-
-        /**
-         * Setup plugin constants
-         *
-         * @access      public
-         * @since       1.0.0
-         * @return      void
-         */
-        private function setup_constants() {
-            // Plugin version
-            define( 'EDD_CONDITIONAL_GATEWAYS_VER', '1.0.0' );
-
-            // Plugin path
-            define( 'EDD_CONDITIONAL_GATEWAYS_DIR', plugin_dir_path( __FILE__ ) );
-
-            // Plugin URL
-            define( 'EDD_CONDITIONAL_GATEWAYS_URL', plugin_dir_url( __FILE__ ) );
-        }
+			return self::$instance;
+		}
 
 
-        /**
-         * Include necessary files
-         *
-         * @access      private
-         * @since       1.0.0
-         * @return      void
-         */
-        private function includes() {
-            require_once EDD_CONDITIONAL_GATEWAYS_DIR . 'includes/functions.php';
+		/**
+		 * Setup plugin constants
+		 *
+		 * @access      public
+		 * @since       1.0.0
+		 * @return      void
+		 */
+		private function setup_constants() {
+			// Plugin version
+			define( 'EDD_CONDITIONAL_GATEWAYS_VER', '1.0.0' );
 
-            if( is_admin() ) {
-                require_once EDD_CONDITIONAL_GATEWAYS_DIR . 'includes/admin/meta-boxes.php';
-            }
-        }
+			// Plugin path
+			define( 'EDD_CONDITIONAL_GATEWAYS_DIR', plugin_dir_path( __FILE__ ) );
 
-
-        /**
-         * Run action and filter hooks
-         *
-         * @access      private
-         * @since       1.0.0
-         * @return      void
-         */
-        private function hooks() {
-            // Add extension settings
-            add_filter( 'edd_settings_extensions', array( $this, 'add_settings' ) );
-
-            // Filter gateways on checkout
-            add_filter( 'edd_payment_gateways', array( $this, 'filter_gateways' ) );
-
-            // Display error if no gateways are allowed
-            add_action( 'init', array( $this, 'gateway_error' ) );
-
-            // Handle licensing
-            if( class_exists( 'EDD_License' ) ) {
-                $license = new EDD_License( __FILE__, 'Conditional Gateways', EDD_CONDITIONAL_GATEWAYS_VER, 'Daniel J Griffiths' );
-            }
-        }
+			// Plugin URL
+			define( 'EDD_CONDITIONAL_GATEWAYS_URL', plugin_dir_url( __FILE__ ) );
+		}
 
 
-        /**
-         * Internationalization
-         *
-         * @access      public
-         * @since       1.0.0
-         * @return      void
-         */
-        public function load_textdomain() {
-            // Set filter for language directory
-            $lang_dir = dirname( plugin_basename( __FILE__ ) ) . '/languages/';
-            $lang_dir = apply_filters( 'edd_conditional_gateways_language_directory', $lang_dir );
+		/**
+		 * Include necessary files
+		 *
+		 * @access      private
+		 * @since       1.0.0
+		 * @return      void
+		 */
+		private function includes() {
+			require_once EDD_CONDITIONAL_GATEWAYS_DIR . 'includes/functions.php';
 
-            // Traditional WordPress plugin locale filter
-            $locale = apply_filters( 'plugin_locale', get_locale(), '' );
-            $mofile = sprintf( '%1$s-%2$s.mo', 'edd-conditional-gateways', $locale );
-
-            // Setup paths to current locale file
-            $mofile_local   = $lang_dir . $mofile;
-            $mofile_global  = WP_LANG_DIR . '/edd-conditional-gateways/' . $mofile;
-
-            if( file_exists( $mofile_global ) ) {
-                // Look in global /wp-content/languages/edd-conditional-gateways/ folder
-                load_textdomain( 'edd-conditional-gateways', $mofile_global );
-            } elseif( file_exists( $mofile_local ) ) {
-                // Look in local /wp-content/plugins/edd-conditional-gateways/ folder
-                load_textdomain( 'edd-conditional-gateways', $mofile_local );
-            } else {
-                // Load the traditional language files
-                load_plugin_textdomain( 'edd-conditional-gateways', false, $lang_dir );
-            }
-        }
+			if( is_admin() ) {
+				require_once EDD_CONDITIONAL_GATEWAYS_DIR . 'includes/admin/meta-boxes.php';
+				require_once EDD_CONDITIONAL_GATEWAYS_DIR . 'includes/admin/settings/register.php';
+			}
+		}
 
 
-        /**
-         * Add settings
-         *
-         * @access      public
-         * @since       1.0.0
-         * @param       array $settings The current plugin settings
-         * @return      array The modified plugin settings
-         */
-        public function add_settings( $settings ) {
-            $new_settings = array(
-                array(
-                    'id'    => 'edd_conditional_gateways_settings',
-                    'name'  => '<strong>' . __( 'Conditional Gateways Settings', 'edd-conditional-gateways' ) . '</strong>',
-                    'desc'  => '',
-                    'type'  => 'header'
-                ),
-                array(
-                    'id'    => 'edd_conditional_gateways_checkout_error',
-                    'name'  => __( 'Checkout Error Message', 'edd-conditional-gateways' ),
-                    'desc'  => __( 'The error message to display if no gateways are available due to the cart contents.', 'edd-conditional-gateways' ),
-                    'type'  => 'text',
-                    'std'   => __( 'Your cart contents have resulted in no gateways being available. Please remove an item from your cart and try again.', 'edd-conditional-gateways' )
-                )
-            );
-
-            return array_merge( $settings, $new_settings );
-        }
+		/**
+		 * Run action and filter hooks
+		 *
+		 * @access      private
+		 * @since       1.0.0
+		 * @return      void
+		 */
+		private function hooks() {
+			// Handle licensing
+			if( class_exists( 'EDD_License' ) ) {
+				$license = new EDD_License( __FILE__, 'Conditional Gateways', EDD_CONDITIONAL_GATEWAYS_VER, 'Daniel J Griffiths' );
+			}
+		}
 
 
-        /**
-         * Filter payment gateways on checkout
-         *
-         * @access      public
-         * @since       1.0.0
-         * @param       array $gateways The available gateways
-         * @return      array $gateways The allowed gateways
-         */
-        public function filter_gateways( $gateways ) {
-            if( edd_is_checkout() ) {
-                $cart_contents = edd_get_cart_contents();
+		/**
+		 * Internationalization
+		 *
+		 * @access      public
+		 * @since       1.0.0
+		 * @return      void
+		 */
+		public function load_textdomain() {
+			// Set filter for language directory
+			$lang_dir = dirname( plugin_basename( __FILE__ ) ) . '/languages/';
+			$lang_dir = apply_filters( 'edd_conditional_gateways_language_directory', $lang_dir );
 
-                // Support wallet!
-                if( class_exists( 'EDD_Wallet' ) && is_user_logged_in() ) {
-                	$user_id = get_current_user_id();
-	                $value   = edd_wallet()->wallet->balance( $user_id );
-	                $total   = edd_get_cart_total();
-	                $fee     = EDD()->fees->get_fee( 'edd-wallet-deposit' );
+			// Traditional WordPress plugin locale filter
+			$locale = apply_filters( 'plugin_locale', get_locale(), '' );
+			$mofile = sprintf( '%1$s-%2$s.mo', 'edd-conditional-gateways', $locale );
 
-	                if( (float) $value >= (float) $total && ! $fee ) {
-						$checkout_label = edd_get_option( 'edd_wallet_gateway_label', __( 'My Wallet', 'edd-wallet' ) );
+			// Setup paths to current locale file
+			$mofile_local  = $lang_dir . $mofile;
+			$mofile_global = WP_LANG_DIR . '/edd-conditional-gateways/' . $mofile;
 
-						if( edd_get_option( 'edd_wallet_gateway_label_value', false ) == true && edd_is_checkout() ) {
-							$checkout_label .= ' ' . sprintf( __( '(%s available)', 'edd-wallet' ), edd_currency_filter( edd_format_amount( $value ) ) );
-						}
-
-						$gateways['wallet'] = array(
-							'admin_label'       => 'Wallet',
-							'checkout_label'    => $checkout_label
-						);
-					}
-				}
-
-				$allowed = $gateways;
-
-                foreach( $gateways as $key => $gateway ) {
-                    if( is_array( $cart_contents ) ) {
-                        foreach( $cart_contents as $item ) {
-                            if( array_key_exists( $key, $allowed ) ) {
-                                if( edd_conditional_gateways_is_limited( $item['id'] ) ) {
-                                    if( ! edd_conditional_gateways_is_allowed( $item['id'], $key ) ) {
-                                        unset( $allowed[$key] );
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                $gateways = $allowed;
-            }
-
-            if( empty( $gateways ) ) {
-                $message = edd_get_option( 'edd_conditional_gateways_checkout_error', __( 'Your cart contents have resulted in no gateways being available. Please remove an item from your cart and try again.', 'edd-conditional-gateways' ) );
-
-                edd_set_error( 'no-allowed-gateways', $message );
-            }
-
-            return $gateways;
-        }
-
-
-        /**
-         * Display an EDD checkout error if no gateways are available
-         *
-         * @access      public
-         * @since       1.0.0
-         * @return      void
-         */
-        public function gateway_error() {
-        }
-    }
+			if( file_exists( $mofile_global ) ) {
+				// Look in global /wp-content/languages/edd-conditional-gateways/ folder
+				load_textdomain( 'edd-conditional-gateways', $mofile_global );
+			} elseif( file_exists( $mofile_local ) ) {
+				// Look in local /wp-content/plugins/edd-conditional-gateways/ folder
+				load_textdomain( 'edd-conditional-gateways', $mofile_local );
+			} else {
+				// Load the traditional language files
+				load_plugin_textdomain( 'edd-conditional-gateways', false, $lang_dir );
+			}
+		}
+	}
 }
 
 
@@ -261,17 +151,17 @@ if( ! class_exists( 'EDD_Conditional_Gateways' ) ) {
  * @return      EDD_Conditional_Gateways The one true EDD_Conditional_Gateways
  */
 function edd_conditional_gateways() {
-    if( ! class_exists( 'Easy_Digital_Downloads' ) ) {
-        if( ! class_exists( 'S214_EDD_Activation' ) ) {
-            require_once 'includes/class.s214-edd-activation.php';
-        }
+	if( ! class_exists( 'Easy_Digital_Downloads' ) ) {
+		if( ! class_exists( 'S214_EDD_Activation' ) ) {
+			require_once 'includes/libraries/class.s214-edd-activation.php';
+		}
 
-        $activation = new S214_EDD_Activation( plugin_dir_path( __FILE__ ), basename( __FILE__ ) );
-        $activation = $activation->run();
+		$activation = new S214_EDD_Activation( plugin_dir_path( __FILE__ ), basename( __FILE__ ) );
+		$activation = $activation->run();
 
-        return EDD_Conditional_Gateways::instance();
-    } else {
-        return EDD_Conditional_Gateways::instance();
-    }
+		return EDD_Conditional_Gateways::instance();
+	} else {
+		return EDD_Conditional_Gateways::instance();
+	}
 }
 add_action( 'plugins_loaded', 'edd_conditional_gateways' );
