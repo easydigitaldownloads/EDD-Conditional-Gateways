@@ -61,7 +61,7 @@ function edd_conditional_gateways_is_allowed( $download_id, $gateway ) {
  * @return      array $gateways The allowed gateways
  */
 function edd_conditional_gateways_filter_gateways( $gateways ) {
-	if( edd_is_checkout() ) {
+	if( ! is_admin() ) {
 		$cart_contents = edd_get_cart_contents();
 
 		// Support wallet!
