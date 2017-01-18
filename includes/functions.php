@@ -61,7 +61,7 @@ function edd_conditional_gateways_is_allowed( $download_id, $gateway ) {
  * @return      array $gateways The allowed gateways
  */
 function edd_conditional_gateways_filter_gateways( $gateways ) {
-	if( ! is_admin() ) {
+	if ( ! is_admin() ) {
 		$cart_contents = edd_get_cart_contents();
 
 		// Support wallet!
@@ -72,15 +72,9 @@ function edd_conditional_gateways_filter_gateways( $gateways ) {
 			$fee     = EDD()->fees->get_fee( 'edd-wallet-deposit' );
 
 			if( (float) $value >= (float) $total && ! $fee ) {
-				$checkout_label = edd_get_option( 'edd_wallet_gateway_label', __( 'My Wallet', 'edd-wallet' ) );
-
-				if( edd_get_option( 'edd_wallet_gateway_label_value', false ) == true && edd_is_checkout() ) {
-					$checkout_label .= ' ' . sprintf( __( '(%s available)', 'edd-wallet' ), edd_currency_filter( edd_format_amount( $value ) ) );
-				}
-
 				$gateways['wallet'] = array(
-					'admin_label'       => 'Wallet',
-					'checkout_label'    => $checkout_label
+					'admin_label'    => 'Wallet',
+					'checkout_label' => edd_get_option( 'edd_wallet_gateway_label', __( 'My Wallet', 'edd-wallet' ) )
 				);
 			}
 		}
@@ -102,14 +96,14 @@ function edd_conditional_gateways_filter_gateways( $gateways ) {
 		}
 
 		$gateways = $allowed;
-	}
 
-	if( empty( $gateways ) ) {
-		$message = edd_get_option( 'edd_conditional_gateways_checkout_error', __( 'Your cart contents have resulted in no gateways being available. Please remove an item from your cart and try again.', 'edd-conditional-gateways' ) );
+		if( empty( $gateways ) ) {
+			$message = edd_get_option( 'edd_conditional_gateways_checkout_error', __( 'Your cart contents have resulted in no gateways being available. Please remove an item from your cart and try again.', 'edd-conditional-gateways' ) );
 
-		edd_set_error( 'no-allowed-gateways', $message );
+			edd_set_error( 'no-allowed-gateways', $message );
+		}
 	}
 
 	return $gateways;
 }
-add_filter( 'edd_payment_gateways', 'edd_conditional_gateways_filter_gateways' );
+add_filter( 'edd_enabled_payment_gateways', 'edd_conditional_gateways_filter_gateways' );
