@@ -61,26 +61,22 @@ function edd_conditional_gateways_is_allowed( $download_id, $gateway ) {
  * @return      array $gateways The allowed gateways
  */
 function edd_conditional_gateways_filter_gateways( $gateways ) {
-	if( ! is_admin() ) {
-		$cart_contents = edd_get_cart_contents();
+	if ( ! is_admin() ) {
+		$cart_contents   = edd_get_cart_contents();
+		$supports_wallet = false;
 
 		// Support wallet!
 		if( class_exists( 'EDD_Wallet' ) && is_user_logged_in() ) {
-			$user_id = get_current_user_id();
-			$value   = edd_wallet()->wallet->balance( $user_id );
-			$total   = edd_get_cart_total();
-			$fee     = EDD()->fees->get_fee( 'edd-wallet-deposit' );
+			$user_id         = get_current_user_id();
+			$value           = edd_wallet()->wallet->balance( $user_id );
+			$total           = edd_get_cart_total();
+			$fee             = EDD()->fees->get_fee( 'edd-wallet-deposit' );
+			$supports_wallet = true;
 
-			if( (float) $value >= (float) $total && ! $fee ) {
-				$checkout_label = edd_get_option( 'edd_wallet_gateway_label', __( 'My Wallet', 'edd-wallet' ) );
-
-				if( edd_get_option( 'edd_wallet_gateway_label_value', false ) == true && edd_is_checkout() ) {
-					$checkout_label .= ' ' . sprintf( __( '(%s available)', 'edd-wallet' ), edd_currency_filter( edd_format_amount( $value ) ) );
-				}
-
+			if ( ! $fee ) {
 				$gateways['wallet'] = array(
-					'admin_label'       => 'Wallet',
-					'checkout_label'    => $checkout_label
+					'admin_label'    => 'Wallet',
+					'checkout_label' => edd_get_option( 'edd_wallet_gateway_label', __( 'My Wallet', 'edd-wallet' ) )
 				);
 			}
 		}
@@ -102,14 +98,34 @@ function edd_conditional_gateways_filter_gateways( $gateways ) {
 		}
 
 		$gateways = $allowed;
-	}
 
-	if( empty( $gateways ) ) {
-		$message = edd_get_option( 'edd_conditional_gateways_checkout_error', __( 'Your cart contents have resulted in no gateways being available. Please remove an item from your cart and try again.', 'edd-conditional-gateways' ) );
+		if ( $supports_wallet && array_key_exists( 'wallet', $gateways ) ) {
+			if ( (float) $value < (float) $total && ! $fee ) {
+				if ( count( $gateways ) == 1 ) {
+					$deposit_page = edd_get_option( 'edd_wallet_deposit_page', false );
 
-		edd_set_error( 'no-allowed-gateways', $message );
+					if( $deposit_page ) {
+						$deposit_page = get_permalink( $deposit_page );
+
+						$message = sprintf( __( 'Your cart contents can only be purchased through deposited funds, but your wallet contains insufficient funds. Please %s and try again.', 'edd-conditional-gateways' ), '<a href="' . $deposit_page . '">' . __( 'deposit funds', 'edd-conditional-gateways' ) . '</a>' );
+					} else {
+						$message = __( 'Your cart contents can only be purchased through deposited funds, but your wallet contains insufficient funds. Please deposit funds and try again.', 'edd-conditional-gateways' );
+					}
+
+					edd_set_error( 'insufficient-wallet-funds', $message );
+				} else {
+					unset( $gateways['wallet'] );
+				}
+			}
+		}
+
+		if( empty( $gateways ) ) {
+			$message = edd_get_option( 'edd_conditional_gateways_checkout_error', __( 'Your cart contents have resulted in no gateways being available. Please remove an item from your cart and try again.', 'edd-conditional-gateways' ) );
+
+			edd_set_error( 'no-allowed-gateways', $message );
+		}
 	}
 
 	return $gateways;
 }
-add_filter( 'edd_payment_gateways', 'edd_conditional_gateways_filter_gateways' );
+add_filter( 'edd_enabled_payment_gateways', 'edd_conditional_gateways_filter_gateways', 11 );
