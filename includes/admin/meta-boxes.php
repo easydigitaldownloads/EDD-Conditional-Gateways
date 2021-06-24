@@ -103,11 +103,7 @@ function edd_conditional_gateways_meta_box_save( $post_id ) {
 
 	foreach( $fields as $field ) {
 		if( isset( $_POST[$field] ) ) {
-			if( is_string( $_POST[$field] ) ) {
-				$new = esc_attr( $_POST[$field] );
-			} else {
-				$new = $_POST[$field];
-			}
+			$new = map_deep( wp_unslash( $_POST[$field] ), 'sanitize_text_field' );
 
 			$new = apply_filters( 'edd_conditional_gateways_meta_box_save_' . $field, $new );
 
