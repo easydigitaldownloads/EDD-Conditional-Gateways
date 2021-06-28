@@ -100,9 +100,9 @@ if( ! class_exists( 'EDD_Conditional_Gateways' ) ) {
 		 * @return      void
 		 */
 		private function hooks() {
-			// Handle licensing
-			if( class_exists( 'EDD_License' ) ) {
-				$license = new EDD_License( __FILE__, 'Conditional Gateways', EDD_CONDITIONAL_GATEWAYS_VER, 'Sandhills Development, LLC' );
+			// Handle licensing.
+			if ( class_exists( 'EDD_License' ) ) {
+				$license = new EDD_License( __FILE__, 'Conditional Gateways', EDD_CONDITIONAL_GATEWAYS_VER, 'Sandhills Development, LLC', null, null, 497453 );
 			}
 		}
 
