@@ -1,17 +1,16 @@
 <?php
 /**
  * Plugin Name:     Easy Digital Downloads - Conditional Gateways
- * Plugin URI:      https://easydigitaldownloads.com/extensions/conditional-gateways/
+ * Plugin URI:      https://easydigitaldownloads.com/downloads/conditional-gateways/
  * Description:     Allows you to configure supported gateways on a per-download basis
  * Version:         1.0.3
- * Author:          Daniel J Griffiths
- * Author URI:      http://section214.com
+ * Author:          Sandhills Development, LLC
+ * Author URI:      https://sandhillsdev.com
  * Text Domain:     edd-conditional-gateways
  *
  * @package         EDD\ConditionalGateways
- * @author          Daniel J Griffiths <dgriffiths@section214.com>
+ * @author          Sandhills Development, LLC
  */
-
 
 // Exit if accessed directly
 if( ! defined( 'ABSPATH' ) ) {
@@ -103,7 +102,7 @@ if( ! class_exists( 'EDD_Conditional_Gateways' ) ) {
 		private function hooks() {
 			// Handle licensing
 			if( class_exists( 'EDD_License' ) ) {
-				$license = new EDD_License( __FILE__, 'Conditional Gateways', EDD_CONDITIONAL_GATEWAYS_VER, 'Daniel J Griffiths' );
+				$license = new EDD_License( __FILE__, 'Conditional Gateways', EDD_CONDITIONAL_GATEWAYS_VER, 'Sandhills Development, LLC' );
 			}
 		}
 
